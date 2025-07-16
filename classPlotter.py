@@ -5,18 +5,22 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class Graph():
-    def __init__(self, title):
+    def __init__(self, title, csvColumn):
         self.source = ColumnDataSource(data=dict(x=[], y=[]))
         self.figure = figure(title=title,x_axis_type="datetime",x_axis_label="Time", y_axis_label="kW")
         self.figure.line(x='x', y='y', source=self.source, line_width=2)
         self.figure.sizing_mode = "stretch_width"
+        self.csvColumn = csvColumn
+    
+    def update(self, data):
+        self.source.data = dict(x=data['time'], y=data["prod"])
 
 dataPath = "data.csv"
 selectedTime = {"value":5}
 
 #Graphs
-productionGraph = Graph("Production")
-energyGraph = Graph("Energy")
+productionGraph = Graph("Production", "prod")
+energyGraph = Graph("Energy", "energy")
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
@@ -42,10 +46,12 @@ def update():
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
     data = data[data['time'] >= cuttofDate]
 
-    productionGraph.source.data = dict(x=data['time'], y=data['prod'])
-    energyGraph.source.data = dict(x=data['time'], y=data['energy'])
+    productionGraph.update(data)
+    energyGraph.update(data)
 
 layout = column(productionGraph.figure, energyGraph.figure, selector, sizing_mode="stretch_width")
 
 curdoc().add_root(layout)
 curdoc().add_periodic_callback(update, 1000)
+
+#run with -> bokeh serve --show classPlotter.py
