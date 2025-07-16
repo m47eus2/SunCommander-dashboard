@@ -19,8 +19,9 @@ dataPath = "data.csv"
 selectedTime = {"value":5}
 
 #Graphs
-productionGraph = Graph("Production", "prod")
-energyGraph = Graph("Energy", "energy")
+graphs = []
+graphs.append(Graph("Production", "prod"))
+graphs.append(Graph("Energy", "energy"))
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
@@ -46,10 +47,10 @@ def update():
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
     data = data[data['time'] >= cuttofDate]
 
-    productionGraph.update(data)
-    energyGraph.update(data)
+    for graph in graphs:
+        graph.update(data)
 
-layout = column(productionGraph.figure, energyGraph.figure, selector, sizing_mode="stretch_width")
+layout = column(graphs[0].figure, graphs[1].figure, selector, sizing_mode="stretch_width")
 
 curdoc().add_root(layout)
 curdoc().add_periodic_callback(update, 1000)
