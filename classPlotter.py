@@ -13,7 +13,7 @@ class Graph():
         self.csvColumn = csvColumn
     
     def update(self, data):
-        self.source.data = dict(x=data['time'], y=data["prod"])
+        self.source.data = dict(x=data['time'], y=data[self.csvColumn])
 
 dataPath = "data.csv"
 selectedTime = {"value":5}
