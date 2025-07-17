@@ -1,0 +1,15 @@
+Agragacja danych:
+
+Przechowywanie pełnych loggów z ostatniego dnia
+Starsze logi zagregowane - średnia godzinowa
+
+Uzależnienie database path od aktualnej daty -> csv z datą
+
+Skrypt do agregacji (wywoływany najlepiej z crona):
+Z pliku csv z ostatniego dnia obliczyć średnią wszystkich wartości w trakcie jednej godziny
+Dodać recordy godzinowe do zagregowanego pliku csv
+Usunąć stary plik csv
+
+Zmiany w plotterze:
+W selectorze dodać opcje max -> wyświetlającą logi z ostatnich 24 godzin -> pomyśleć jak to rozwiązać z optymalizacją (może uzależnić początkowego taila od wybranej w selectorze opcji)
+Dodać kolejne opcje, może kolejny selector, przy opcjach dalszych niż 24 godziny trzeba ciągnąć dane ze zagregowanego pliku
