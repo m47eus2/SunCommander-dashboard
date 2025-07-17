@@ -5,10 +5,10 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class Graph():
-    def __init__(self, title, csvColumn):
+    def __init__(self, title, color, csvColumn):
         self.source = ColumnDataSource(data=dict(x=[], y=[]))
         self.figure = figure(title=title,x_axis_type="datetime",x_axis_label="Time", y_axis_label="kW")
-        self.figure.line(x='x', y='y', source=self.source, line_width=2)
+        self.figure.line(x='x', y='y', source=self.source, color=color, line_width=2)
         self.figure.sizing_mode = "stretch_width"
         self.csvColumn = csvColumn
     
@@ -21,12 +21,17 @@ selectedTime = {"value":5}
 #Graphs
 graphs = []
 
-graphs.append(Graph("Production", "prod"))
-graphs.append(Graph("Energy", "energy"))
+graphs.append(Graph("Production", "limegreen", "prod"))
 
-graphs.append(Graph("Receiver A", "ra"))
-graphs.append(Graph("Receiver B", "rb"))
-graphs.append(Graph("Receiver C", "rc"))
+graphs.append(Graph("Energy", "dodgerblue", "energy"))
+graphs.append(Graph("Accumulated energy", "dodgerblue", "cEnergy"))
+
+graphs.append(Graph("Receiver A", "darkslateblue", "ra"))
+graphs.append(Graph("Receiver B", "darkslateblue", "rb"))
+graphs.append(Graph("Receiver C", "darkslateblue", "rc"))
+
+graphs.append(Graph("Boiler 1", "lightseagreen", "b1"))
+graphs.append(Graph("Boiler 2", "lightseagreen", "b2"))
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
@@ -56,8 +61,9 @@ def update():
         graph.update(data)
 
 layout = column(graphs[0].figure, 
-                graphs[1].figure, 
-                row(graphs[2].figure, graphs[3].figure, graphs[4].figure, sizing_mode="stretch_width"), 
+                row(graphs[1].figure, graphs[2].figure, sizing_mode="stretch_width"),
+                row(graphs[3].figure, graphs[4].figure, graphs[5].figure, sizing_mode="stretch_width"), 
+                row(graphs[6].figure, graphs[7].figure, sizing_mode="stretch_width"),
                 selector, 
                 sizing_mode="stretch_width")
 
