@@ -5,9 +5,9 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 class Graph():
-    def __init__(self, title, color, csvColumn):
+    def __init__(self, title, color, height, csvColumn):
         self.source = ColumnDataSource(data=dict(x=[], y=[]))
-        self.figure = figure(title=title,x_axis_type="datetime",x_axis_label="Time", y_axis_label="kW")
+        self.figure = figure(title=title,x_axis_type="datetime",x_axis_label="Time", y_axis_label="kW", height=height)
         self.figure.line(x='x', y='y', source=self.source, color=color, line_width=2)
         self.figure.sizing_mode = "stretch_width"
         self.csvColumn = csvColumn
@@ -21,17 +21,17 @@ selectedTime = {"value":5}
 #Graphs
 graphs = []
 
-graphs.append(Graph("Production", "limegreen", "prod"))
+graphs.append(Graph("Production", "limegreen", 500, "prod"))
 
-graphs.append(Graph("Energy", "dodgerblue", "energy"))
-graphs.append(Graph("Accumulated energy", "dodgerblue", "cEnergy"))
+graphs.append(Graph("Energy", "dodgerblue", 500,"energy"))
+graphs.append(Graph("Accumulated energy", "dodgerblue", 500, "cEnergy"))
 
-graphs.append(Graph("Receiver A", "darkslateblue", "ra"))
-graphs.append(Graph("Receiver B", "darkslateblue", "rb"))
-graphs.append(Graph("Receiver C", "darkslateblue", "rc"))
+graphs.append(Graph("Receiver A", "darkslateblue", 400, "ra"))
+graphs.append(Graph("Receiver B", "darkslateblue", 400, "rb"))
+graphs.append(Graph("Receiver C", "darkslateblue", 400, "rc"))
 
-graphs.append(Graph("Boiler 1", "lightseagreen", "b1"))
-graphs.append(Graph("Boiler 2", "lightseagreen", "b2"))
+graphs.append(Graph("Boiler 1", "lightseagreen", 400, "b1"))
+graphs.append(Graph("Boiler 2", "lightseagreen", 400, "b2"))
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
