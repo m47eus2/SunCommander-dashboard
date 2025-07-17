@@ -16,20 +16,20 @@ def getCEnergyValue():
         return 0
 
 
-def log(now,prod,ra,rb,rc,b1,b2,energy):
+def log(now,prod,ra,rb,rc,sa,sb,sc,b1,b2,energy):
     fileExists = os.path.isfile(PATH)
     with open(PATH, 'a', newline='') as file:
         writer = csv.writer(file)
         if not fileExists:
-            writer.writerow(['time','prod','ra','rb','rc','b1','b2','energy','cEnergy'])
+            writer.writerow(['time','prod','ra','rb','rc','sa','sb','sc','b1','b2','energy','cEnergy'])
             print("First row created")
         cEnergy["value"] += energy
-        writer.writerow([now,prod,ra,rb,rc,b1,b2,energy,cEnergy["value"]])
+        writer.writerow([now,prod,ra,rb,rc,sa,sb,sc,b1,b2,energy,cEnergy["value"]])
         print(f"Data logged -> {now}")
 
 cEnergy = {"value":getCEnergyValue()}
 
 while(True):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    log(now, random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000))
+    log(now, random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(2),random.randrange(2), random.randrange(2),random.randrange(1000),random.randrange(1000),random.randrange(1000))
     time.sleep(1)
