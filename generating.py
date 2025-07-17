@@ -29,7 +29,17 @@ def log(now,prod,ra,rb,rc,sa,sb,sc,b1,b2,energy):
 
 cEnergy = {"value":getCEnergyValue()}
 
+sa = 0
+sb = 0
+sc = 0
+
 while(True):
     now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    log(now, random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(2),random.randrange(2), random.randrange(2),random.randrange(1000),random.randrange(1000),random.randrange(1000))
+    rand=random.randrange(10)
+    if rand > 8: sa=random.randrange(2)
+    rand=random.randrange(10)
+    if rand > 8: sb=random.randrange(2)
+    rand=random.randrange(10)
+    if rand > 8: sc=random.randrange(2)
+    log(now, random.randrange(1000),random.randrange(1000),random.randrange(1000),random.randrange(1000), sa, sb, sc ,random.randrange(1000),random.randrange(1000),random.randrange(1000))
     time.sleep(1)

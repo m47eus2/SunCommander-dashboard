@@ -38,6 +38,10 @@ graphs.append(Graph("Receiver A", ["darkslateblue"], 400, ["ra"]))
 graphs.append(Graph("Receiver B", ["darkslateblue"], 400, ["rb"]))
 graphs.append(Graph("Receiver C", ["darkslateblue"], 400, ["rc"]))
 
+graphs.append(Graph("Receiver A state", ["blue"], 200, ["sa"]))
+graphs.append(Graph("Receiver B state", ["blue"], 200, ["sb"]))
+graphs.append(Graph("Receiver C state", ["blue"], 200, ["sc"]))
+
 graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, ["b1"]))
 graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, ["b2"]))
 
@@ -70,8 +74,9 @@ def update():
 
 layout = column(graphs[0].figure, 
                 row(graphs[1].figure, graphs[2].figure, sizing_mode="stretch_width"),
-                row(graphs[3].figure, graphs[4].figure, graphs[5].figure, sizing_mode="stretch_width"), 
-                row(graphs[6].figure, graphs[7].figure, sizing_mode="stretch_width"),
+                row(graphs[3].figure, graphs[4].figure, graphs[5].figure, sizing_mode="stretch_width"),
+                row(graphs[6].figure, graphs[7].figure, graphs[8].figure, sizing_mode="stretch_width"),
+                row(graphs[9].figure, graphs[10].figure, sizing_mode="stretch_width"),
                 selector, 
                 sizing_mode="stretch_width")
 
