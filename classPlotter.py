@@ -11,7 +11,7 @@ class Graph():
         for column in csvColumns:
             self.sources.append(ColumnDataSource(data=dict(x=[],y=[])))
 
-        self.figure = figure(title=title,x_axis_type="datetime",x_axis_label="Time", y_axis_label="kW", height=height)
+        self.figure = figure(title=title,x_axis_type="datetime", y_axis_label="kW", height=height)
 
         for i in range(len(csvColumns)):
             self.figure.line(x='x', y='y', source=self.sources[i], color=colors[i], line_width=2)
@@ -38,9 +38,9 @@ graphs.append(Graph("Receiver A", ["darkslateblue"], 400, ["ra"]))
 graphs.append(Graph("Receiver B", ["darkslateblue"], 400, ["rb"]))
 graphs.append(Graph("Receiver C", ["darkslateblue"], 400, ["rc"]))
 
-graphs.append(Graph("Receiver A state", ["blue"], 200, ["sa"]))
-graphs.append(Graph("Receiver B state", ["blue"], 200, ["sb"]))
-graphs.append(Graph("Receiver C state", ["blue"], 200, ["sc"]))
+graphs.append(Graph("Receiver A state", ["steelblue"], 150, ["sa"]))
+graphs.append(Graph("Receiver B state", ["steelblue"], 150, ["sb"]))
+graphs.append(Graph("Receiver C state", ["steelblue"], 150, ["sc"]))
 
 graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, ["b1"]))
 graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, ["b2"]))
