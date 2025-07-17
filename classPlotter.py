@@ -20,8 +20,13 @@ selectedTime = {"value":5}
 
 #Graphs
 graphs = []
+
 graphs.append(Graph("Production", "prod"))
 graphs.append(Graph("Energy", "energy"))
+
+graphs.append(Graph("Receiver A", "ra"))
+graphs.append(Graph("Receiver B", "rb"))
+graphs.append(Graph("Receiver C", "rc"))
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
@@ -50,7 +55,11 @@ def update():
     for graph in graphs:
         graph.update(data)
 
-layout = column(graphs[0].figure, graphs[1].figure, selector, sizing_mode="stretch_width")
+layout = column(graphs[0].figure, 
+                graphs[1].figure, 
+                row(graphs[2].figure, graphs[3].figure, graphs[4].figure, sizing_mode="stretch_width"), 
+                selector, 
+                sizing_mode="stretch_width")
 
 curdoc().add_root(layout)
 curdoc().add_periodic_callback(update, 1000)
