@@ -11,14 +11,15 @@ data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
 
 avrRows = []
 
-for i in range(24):
-    hourData = data[data['time'].dt.hour == i]
-    avr = []
-    avr.append(f"{yesterday.strftime('%Y-%m-%d')} {i:02d}:00:00")
+for hour in range(24):
+    hourData = data[data['time'].dt.hour == hour]
+    avrs = []
+    avrs.append(f"{yesterday.strftime('%Y-%m-%d')} {hour:02d}:00:00")
     columns = data.columns.tolist()
     for colnum in range(1, len(columns)):
-        avr.append(hourData[columns[colnum]].mean())
-    avrRows.append(avr)
+        avr = hourData[columns[colnum]].mean()
+        avrs.append(avr if not pd.isnull(avr) else 0)
+    avrRows.append(avrs)
 
 AGRPATH = "agrData.csv"
 
