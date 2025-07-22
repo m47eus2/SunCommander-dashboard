@@ -23,7 +23,6 @@ class Graph():
         for i in range(len(self.csvColumns)):
             self.sources[i].data = dict(x=data["time"], y=data[self.csvColumns[i]])
 
-dataPath = "data.csv"
 selectedTime = {"value":5}
 
 #Graphs
@@ -63,7 +62,10 @@ def selectorUpdate(attr,old,new):
 selector.on_change('value',selectorUpdate)
 
 def update():
-    data = pd.read_csv(dataPath)
+    date = datetime.now().strftime("%Y-%m-%d")
+    PATH = f"database/{date}-log.csv"
+
+    data = pd.read_csv(PATH)
     data = data.tail(3600)
     data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])

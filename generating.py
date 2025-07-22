@@ -4,11 +4,12 @@ import random
 from datetime import datetime
 import time
 import pandas as pd
-
-PATH = "data.csv"
+import glob
 
 def getCEnergyValue():
-    if os.path.isfile(PATH):
+    files = glob.glob("database/*")
+    if files:
+        PATH = sorted(files)[-1]
         data = pd.read_csv(PATH)
         data = data.tail(1)
         return int(data['cEnergy'].values[0])
@@ -17,6 +18,8 @@ def getCEnergyValue():
 
 
 def log(now,prod,ra,rb,rc,sa,sb,sc,b1,b2,energy):
+    date = datetime.now().strftime("%Y-%m-%d")
+    PATH = f"database/{date}-log.csv"
     fileExists = os.path.isfile(PATH)
     with open(PATH, 'a', newline='') as file:
         writer = csv.writer(file)
