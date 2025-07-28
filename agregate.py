@@ -21,7 +21,7 @@ for hour in range(24):
         avrs.append(avr if not pd.isnull(avr) else 0)
     avrRows.append(avrs)
 
-AGRPATH = "agrData.csv"
+AGRPATH = "database/agrData.csv"
 
 fileExists = os.path.isfile(AGRPATH)
 with open(AGRPATH, 'a', newline='') as file:

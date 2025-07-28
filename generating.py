@@ -7,7 +7,7 @@ import pandas as pd
 import glob
 
 def getCEnergyValue():
-    files = glob.glob("database/*")
+    files = glob.glob("database/*-log.csv")
     if files:
         PATH = sorted(files)[-1]
         data = pd.read_csv(PATH)

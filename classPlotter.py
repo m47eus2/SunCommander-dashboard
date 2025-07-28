@@ -53,7 +53,14 @@ selector = Select(title="Zakres danych", value=5, options=[
     ('10','10 min'),
     ('20','20 min'),
     ('30','30 min'),
-    ('60','60 min')
+    ('60','60 min'),
+    ('120', '2 h'),
+    ('240', '4 h'),
+    ('360', '6 h'),
+    ('480', '8 h'),
+    ('720', '12 h'),
+    ('1440', '24 h'),
+    ('2880', '48 h')
 ])
 
 def selectorUpdate(attr,old,new):
@@ -63,10 +70,14 @@ selector.on_change('value',selectorUpdate)
 
 def update():
     date = datetime.now().strftime("%Y-%m-%d")
-    PATH = f"database/{date}-log.csv"
+    recentDataPATH = f"database/{date}-log.csv"
+    agregatedDataPATH = "database/agrData.csv"
 
-    data = pd.read_csv(PATH)
-    data = data.tail(3600)
+    recentData = pd.read_csv(recentDataPATH)
+    agregatedData = pd.read_csv(agregatedDataPATH)
+    data = pd.concat([agregatedData, recentData], ignore_index=True)
+    #data = data.tail(3600)
+
     data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
     data = data[data['time'] >= cuttofDate]
