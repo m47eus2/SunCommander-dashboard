@@ -113,19 +113,20 @@ while True:
         log(f"Trying to connect with {port}")
         serialPort = serial.Serial(port, baudrate, timeout=3)
         log(f"Connected with {port}")
-        break
+        time.sleep(4)
+        
+        try:
+            while True:
+                if serialPort.in_waiting:
+                    line = serialPort.readline().decode("utf-8").rstrip()
+                    data.collectData(line)
+                else:
+                    time.sleep(0.01)
+        except Exception as e:
+            log(e)
+        finally:
+            serialPort.close()
+
     except:
-        log("Cannot connect with {port}")
+        log(f"Cannot connect with {port}")
         time.sleep(3)
-
-time.sleep(4)
-
-try:
-    while True:
-        if serialPort.in_waiting:
-            line = serialPort.readline().decode("utf-8").rstrip()
-            data.collectData(line)
-        else:
-            time.sleep(0.01)
-finally:
-    serialPort.close()
