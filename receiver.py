@@ -95,23 +95,35 @@ class Data:
         else:
             return (0.0, 0.0)
 
-
     def resetValues(self):
         for key in self.data.keys():
             self.data[key] = '0'
+
+def log(info):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{now}]: {info}")
 
 
 port = "/dev/ttyUSB0"
 baudrate = 115200
 data = Data()
-serialPort = serial.Serial(port, baudrate, timeout=4)
-time.sleep(2)
+
+while True:
+    try:
+        log(f"Trying to connect with {port}")
+        serialPort = serial.Serial(port, baudrate, timeout=3)
+        log(f"Connected with {port}")
+        break
+    except:
+        log("Cannot connect with {port}")
+        time.sleep(3)
+
+time.sleep(4)
 
 try:
     while True:
         if serialPort.in_waiting:
             line = serialPort.readline().decode("utf-8").rstrip()
-            print(line)
             data.collectData(line)
         else:
             time.sleep(0.01)
