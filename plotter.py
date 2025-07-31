@@ -3,15 +3,16 @@ from bokeh.models import ColumnDataSource, Select
 from bokeh.plotting import figure, curdoc
 import pandas as pd
 from datetime import datetime, timedelta
+import os
 
 class Graph():
-    def __init__(self, title, colors, height, csvColumns):
+    def __init__(self, title, colors, height, yLabel,csvColumns):
 
         self.sources = []
         for column in csvColumns:
             self.sources.append(ColumnDataSource(data=dict(x=[],y=[])))
 
-        self.figure = figure(title=title,x_axis_type="datetime", y_axis_label="kW", height=height)
+        self.figure = figure(title=title,x_axis_type="datetime", y_axis_label=yLabel, height=height)
 
         for i in range(len(csvColumns)):
             self.figure.line(x='x', y='y', source=self.sources[i], color=colors[i], line_width=2)
@@ -28,21 +29,23 @@ selectedTime = {"value":5}
 #Graphs
 graphs = []
 
-graphs.append(Graph("Production", ["limegreen"], 500, ["prod"]))
+graphs.append(Graph("Produkcja", ["limegreen"], 400, "kW", ["Irms0"]))
+graphs.append(Graph("Produkcja", ["limegreen"], 400, "kWh", ["Irms0-total"]))
 
-graphs.append(Graph("Energy", ["dodgerblue"], 500,["energy"]))
-graphs.append(Graph("Accumulated energy", ["dodgerblue"], 500, ["cEnergy"]))
 
-graphs.append(Graph("Receiver A", ["darkslateblue"], 400, ["ra"]))
-graphs.append(Graph("Receiver B", ["darkslateblue"], 400, ["rb"]))
-graphs.append(Graph("Receiver C", ["darkslateblue"], 400, ["rc"]))
+graphs.append(Graph("Moc", ["dodgerblue"], 400, "kW", ["p"]))
+graphs.append(Graph("Energia", ["dodgerblue"], 400, "kWh", ["e"]))
 
-graphs.append(Graph("Receiver A state", ["steelblue"], 150, ["sa"]))
-graphs.append(Graph("Receiver B state", ["steelblue"], 150, ["sb"]))
-graphs.append(Graph("Receiver C state", ["steelblue"], 150, ["sc"]))
+graphs.append(Graph("Pobór odbiornik A", ["cornflowerblue","tomato"], 400, "kW", ["a","a-total"]))
+graphs.append(Graph("Pobór odbiornik B", ["cornflowerblue","tomato"], 400, "kW", ["b","b-total"]))
+graphs.append(Graph("Pobór odbiornik C", ["cornflowerblue","tomato"], 400, "kW", ["c","c-total"]))
 
-graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, ["b1"]))
-graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, ["b2"]))
+graphs.append(Graph("Stan obriornik A", ["steelblue"], 150, "", ["a-state"]))
+graphs.append(Graph("Stan obriornik B", ["steelblue"], 150, "", ["b-state"]))
+graphs.append(Graph("Stan obriornik C", ["steelblue"], 150, "", ["c-state"]))
+
+graphs.append(Graph("Stan boiler 1", ["lightseagreen"], 400, "", ["b0"]))
+graphs.append(Graph("Stan boiler 2", ["lightseagreen"], 400, "", ["b1"]))
 
 #Timespan selector 
 selector = Select(title="Zakres danych", value=5, options=[
@@ -74,9 +77,11 @@ def update():
     agregatedDataPATH = "database/agrData.csv"
 
     recentData = pd.read_csv(recentDataPATH)
-    agregatedData = pd.read_csv(agregatedDataPATH)
-    data = pd.concat([agregatedData, recentData], ignore_index=True)
-    #data = data.tail(3600)
+    if os.path.isfile(agregatedDataPATH):
+        agregatedData = pd.read_csv(agregatedDataPATH)
+        data = pd.concat([agregatedData, recentData], ignore_index=True)
+    else:
+        data = recentData
 
     data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
@@ -85,15 +90,15 @@ def update():
     for graph in graphs:
         graph.update(data)
 
-layout = column(graphs[0].figure, 
-                row(graphs[1].figure, graphs[2].figure, sizing_mode="stretch_width"),
-                row(graphs[3].figure, graphs[4].figure, graphs[5].figure, sizing_mode="stretch_width"),
-                row(graphs[6].figure, graphs[7].figure, graphs[8].figure, sizing_mode="stretch_width"),
-                row(graphs[9].figure, graphs[10].figure, sizing_mode="stretch_width"),
+layout = column(row(graphs[0].figure, graphs[1].figure, sizing_mode="stretch_width"),
+                row(graphs[2].figure, graphs[3].figure, sizing_mode="stretch_width"),
+                row(graphs[4].figure, graphs[5].figure, graphs[6].figure, sizing_mode="stretch_width"),
+                row(graphs[7].figure, graphs[8].figure, graphs[9].figure, sizing_mode="stretch_width"),
+                row(graphs[10].figure, graphs[11].figure, sizing_mode="stretch_width"),
                 selector, 
                 sizing_mode="stretch_width")
 
 curdoc().add_root(layout)
 curdoc().add_periodic_callback(update, 1000)
 
-#run with -> bokeh serve --show classPlotter.py
+#run with -> bokeh serve --show plotter.py
