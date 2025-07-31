@@ -4,7 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 yesterday = datetime.now() - timedelta(days=1)
-PATH = f"/home/raspberrypi/pythonBokeh/v3/database/{yesterday.strftime('%Y-%m-%d')}-log.csv"
+PATH = f"database/{yesterday.strftime('%Y-%m-%d')}-log.csv"
 
 data = pd.read_csv(PATH)
 data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
@@ -21,7 +21,7 @@ for hour in range(24):
         avrs.append(avr if not pd.isnull(avr) else 0)
     avrRows.append(avrs)
 
-AGRPATH = "/home/raspberrypi/pythonBokeh/v3/database/agrData.csv"
+AGRPATH = "database/agrData.csv"
 
 fileExists = os.path.isfile(AGRPATH)
 with open(AGRPATH, 'a', newline='') as file:
