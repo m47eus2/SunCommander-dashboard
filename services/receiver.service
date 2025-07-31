@@ -1,0 +1,12 @@
+[Unit]
+Description=Serial receiver
+After=network.target
+
+[Service]
+User=mateusz
+WorkingDirectory=/home/mateusz/dashboard
+ExecStart=/home/mateusz/dashboard/venv/bin/python3 -u receiver.py
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

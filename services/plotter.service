@@ -1,0 +1,12 @@
+[Unit]
+Description=Plotter
+After=network.target
+
+[Service]
+User=mateusz
+WorkingDirectory=/home/mateusz/dashboard
+ExecStart=/home/mateusz/dashboard/venv/bin/bokeh serve plotter.py --port 5000 --allow-websocket-origin=*
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
