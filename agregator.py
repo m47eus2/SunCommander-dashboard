@@ -3,6 +3,11 @@ import csv
 import os
 from datetime import datetime, timedelta
 
+def log(info):
+    with open("logs/agregator.log", 'a') as file:
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"[{now}]: {info}\n")
+
 yesterday = datetime.now() - timedelta(days=1)
 PATH = f"database/{yesterday.strftime('%Y-%m-%d')}-log.csv"
 
@@ -28,8 +33,6 @@ with open(AGRPATH, 'a', newline='') as file:
     writer = csv.writer(file)
     if not fileExists:
         writer.writerow(data.columns.tolist())
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        print(f"[{now}]: Created new agrData.csv file")
+        log("Created new agrData.csv file")
     writer.writerows(avrRows)
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{now}]: Agregated data from {PATH}")
+    log(f"Agregated data from {PATH}")
