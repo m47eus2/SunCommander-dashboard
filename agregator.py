@@ -4,9 +4,8 @@ import os
 from datetime import datetime, timedelta
 
 def log(info):
-    with open("logs/agregator.log", 'a') as file:
-        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        file.write(f"[{now}]: {info}\n")
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{now}]: {info}")
 
 yesterday = datetime.now() - timedelta(days=1)
 PATH = f"database/{yesterday.strftime('%Y-%m-%d')}-log.csv"
