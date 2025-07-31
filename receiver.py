@@ -113,6 +113,8 @@ while True:
         log(f"Trying to connect with {port}")
         serialPort = serial.Serial(port, baudrate, timeout=3)
         log(f"Connected with {port}")
+
+        #Need to be put in function
         time.sleep(4)
         
         try:
@@ -126,6 +128,7 @@ while True:
             log(e)
         finally:
             serialPort.close()
+        #End of the function
 
     except:
         log(f"Cannot connect with {port}")
