@@ -57,6 +57,7 @@ class Data:
 
     def fillRow(self):
         self.data['time'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.data['Irms0'] = float(self.data['Irms0'])*3.0
         receiversPower = self.calcReceiversPower()
         self.receiverEnergy += self.calcEnergy(receiversPower)
         self.productionEnergy += self.calcEnergy(float(self.data['Irms0']))
