@@ -106,30 +106,30 @@ def log(info):
 
 port = "/dev/ttyUSB0"
 baudrate = 115200
+connection = False
 data = Data()
 
-while True:
+
+try:
+    log(f"Trying to connect with {port}")
+    serialPort = serial.Serial(port, baudrate, timeout=3)
+    log(f"Connected with {port}")
+    connection = True
+    time.sleep(4)
+
+except:
+    log(f"Cannot connect with {port}")
+    connection = False
+
+if connection:
     try:
-        log(f"Trying to connect with {port}")
-        serialPort = serial.Serial(port, baudrate, timeout=3)
-        log(f"Connected with {port}")
-
-        #Need to be put in function
-        time.sleep(4)
-        
-        try:
-            while True:
-                if serialPort.in_waiting:
-                    line = serialPort.readline().decode("utf-8").rstrip()
-                    data.collectData(line)
-                else:
-                    time.sleep(0.01)
-        except Exception as e:
-            log(e)
-        finally:
-            serialPort.close()
-        #End of the function
-
-    except:
-        log(f"Cannot connect with {port}")
-        time.sleep(3)
+        while True:
+            if serialPort.in_waiting:
+                line = serialPort.readline().decode("utf-8").rstrip()
+                data.collectData(line)
+            else:
+                time.sleep(0.01)
+    except Exception as e:
+        log(e)
+    finally:
+        serialPort.close()
