@@ -72,6 +72,7 @@ def selectorUpdate(attr,old,new):
 selector.on_change('value',selectorUpdate)
 
 def update():
+    #Reading recentData and agregatedData when it exists
     date = datetime.now().strftime("%Y-%m-%d")
     recentDataPATH = f"database/{date}-log.csv"
     agregatedDataPATH = "database/agrData.csv"
@@ -83,13 +84,17 @@ def update():
     else:
         data = recentData
 
+    #Formating time collumn as datetime
     data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
+    #Calculating cuttof date base on selected timespan
     cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
+    #Filtering data with cuttof date
     data = data[data['time'] >= cuttofDate]
 
     for graph in graphs:
         graph.update(data)
 
+#Graphs layout
 layout = column(row(graphs[0].figure, graphs[1].figure, sizing_mode="stretch_width"),
                 row(graphs[2].figure, graphs[3].figure, sizing_mode="stretch_width"),
                 row(graphs[4].figure, graphs[5].figure, graphs[6].figure, sizing_mode="stretch_width"),
@@ -98,6 +103,7 @@ layout = column(row(graphs[0].figure, graphs[1].figure, sizing_mode="stretch_wid
                 selector, 
                 sizing_mode="stretch_width")
 
+#Creating webpage and calling update function
 curdoc().add_root(layout)
 curdoc().add_periodic_callback(update, 1000)
 
