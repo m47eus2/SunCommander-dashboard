@@ -27,11 +27,14 @@ class Data:
             'e':'0'
         }
 
+        #Getting last values of receivers and production energy
         (self.receiverEnergy, self.productionEnergy) = self.getLastEnergyValues()
+
         self.powerKeys = ['Irms0','a','b','c','a-total','b-total','c-total']
         self.stateKeys = ['a-state','b-state','c-state','b0','b1']
         self.timer = 0
 
+    #Getting line from serial, splitting it to key and value, changing current values to power and writing it to dictionary
     def collectData(self, line):
         line = line.split(':')
         key = line[0][1:]
@@ -41,6 +44,7 @@ class Data:
         if key in self.stateKeys:
             self.data[key] = line[1]
         if key == 'b1':
+            #When last value comes filling dict and writing it to csv
             self.writeToCsv()
 
     def writeToCsv(self):
@@ -50,8 +54,11 @@ class Data:
             writer = csv.writer(file)
             if not fileExists:
                 writer.writerow(self.data.keys())
+            #Filling dictionary last values -> time, modyfing Irms0, receivers total power, calculating energies, 
             self.fillRow()
+            #Writing dictionary to csv
             writer.writerow(self.data.values())
+            #Reseting timer for calculating energy
             self.timer = time.perf_counter()
             self.resetValues()
 
@@ -110,7 +117,7 @@ baudrate = 115200
 connection = False
 data = Data()
 
-
+#Connection
 try:
     log(f"Trying to connect with {port}")
     serialPort = serial.Serial(port, baudrate, timeout=3)
@@ -122,6 +129,7 @@ except:
     log(f"Cannot connect with {port}")
     connection = False
 
+#Receiving data
 if connection:
     try:
         while True:
