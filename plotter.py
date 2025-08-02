@@ -1,5 +1,5 @@
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, Select
+from bokeh.models import ColumnDataSource, Select, TextInput
 from bokeh.plotting import figure, curdoc
 import pandas as pd
 from datetime import datetime, timedelta
@@ -24,7 +24,10 @@ class Graph():
         for i in range(len(self.csvColumns)):
             self.sources[i].data = dict(x=data["time"], y=data[self.csvColumns[i]])
 
-selectedTime = {"value":5}
+selectedTime = {
+    "value":5,
+    "type":0
+    }
 
 #Graphs
 graphs = []
@@ -47,29 +50,31 @@ graphs.append(Graph("Stan obriornik C", ["steelblue"], 150, "", ["c-state"]))
 graphs.append(Graph("Stan boiler 1", ["lightseagreen"], 400, "", ["b0"]))
 graphs.append(Graph("Stan boiler 2", ["lightseagreen"], 400, "", ["b1"]))
 
-#Timespan selector 
-selector = Select(title="Zakres danych", value=5, options=[
-    ('1','1 min'),
-    ('2','2 min'),
-    ('3','3 min'),
-    ('5','5 min'),
-    ('10','10 min'),
-    ('20','20 min'),
-    ('30','30 min'),
-    ('60','60 min'),
-    ('120', '2 h'),
-    ('240', '4 h'),
-    ('360', '6 h'),
-    ('480', '8 h'),
-    ('720', '12 h'),
-    ('1440', '24 h'),
-    ('2880', '48 h')
+# Recent timespan selector 
+selector = Select(title="Typ", value=0, options=[
+    ('0','Minuty'),
+    ('1','Godziny'),
+    ('2','Dni'),
+    ('3','Tygodnie'),
+    ('4','Miesiące'),
+    ('5','Lata')
 ])
 
 def selectorUpdate(attr,old,new):
-    selectedTime['value'] = int(new)
+    selectedTime['type'] = int(new)
 
 selector.on_change('value',selectorUpdate)
+
+# Text input
+textInput = TextInput(title="Wartość", value='10')
+
+def textInputUpdate(attr,old,new):
+    try:
+        selectedTime["value"] = int(new)
+    except:
+        pass
+
+textInput.on_change('value',textInputUpdate)
 
 def update():
     #Reading recentData and agregatedData when it exists
@@ -78,7 +83,7 @@ def update():
     agregatedDataPATH = "database/agrData.csv"
 
     recentData = pd.read_csv(recentDataPATH)
-    if os.path.isfile(agregatedDataPATH):
+    if (os.path.isfile(agregatedDataPATH)==1) & (selectedTime["type"]>1):
         agregatedData = pd.read_csv(agregatedDataPATH)
         data = pd.concat([agregatedData, recentData], ignore_index=True)
     else:
@@ -86,8 +91,17 @@ def update():
 
     #Formating time collumn as datetime
     data['time'] = pd.to_datetime(data['time'], format="%Y-%m-%d %H:%M:%S")
+
     #Calculating cuttof date base on selected timespan
-    cuttofDate = datetime.now() - timedelta(minutes = selectedTime['value'])
+    if selectedTime['type'] == 0: tDelta = timedelta(minutes = selectedTime['value'])
+    elif selectedTime['type'] == 1: tDelta = timedelta(hours = selectedTime['value'])
+    elif selectedTime['type'] == 2: tDelta = timedelta(days = selectedTime['value'])
+    elif selectedTime['type'] == 3: tDelta = timedelta(weeks = selectedTime['value'])
+    elif selectedTime['type'] == 4: tDelta = timedelta(days = selectedTime['value']*31)
+    elif selectedTime['type'] == 5: tDelta = timedelta(days = selectedTime['value']*365)
+
+    cuttofDate = datetime.now() - tDelta
+
     #Filtering data with cuttof date
     data = data[data['time'] >= cuttofDate]
 
@@ -100,7 +114,7 @@ layout = column(row(graphs[0].figure, graphs[1].figure, sizing_mode="stretch_wid
                 row(graphs[4].figure, graphs[5].figure, graphs[6].figure, sizing_mode="stretch_width"),
                 row(graphs[7].figure, graphs[8].figure, graphs[9].figure, sizing_mode="stretch_width"),
                 row(graphs[10].figure, graphs[11].figure, sizing_mode="stretch_width"),
-                selector, 
+                row(selector, textInput), 
                 sizing_mode="stretch_width")
 
 #Creating webpage and calling update function
