@@ -42,7 +42,10 @@ class Data:
         if key in self.powerKeys:
             self.data[key] = self.currentToPower(line[1])
         if key in self.stateKeys:
-            self.data[key] = line[1]
+            try:
+                self.data[key] = float(line[1])
+            except:
+                self.data[key] = 0.0
         if key == 'b1':
             #When last value comes filling dict and writing it to csv
             self.writeToCsv()
@@ -91,15 +94,28 @@ class Data:
             return 0.0
 
     def currentToPower(self, current):
-        return (float(current)*230.0)/1000.0
+        try:
+            power = (float(current)*230.0)/1000.0
+        except:
+            power = 0.0
+        return power
     
     def getLastEnergyValues(self):
+        linesToTry = 5
         files = glob.glob("database/*-log.csv")
         if files:
             PATH = sorted(files)[-1]
             csvFile=pd.read_csv(PATH)
-            csvFile=csvFile.tail(1)
-            return (float(csvFile['e'].values[0]), float(csvFile['Irms0-total'].values[0]))
+            csvFile=csvFile.tail(linesToTry)
+            for i in range(linesToTry-1, -1, -1):
+                try:
+                    log(f"Trying to read latest values from line {i}")
+                    return (float(csvFile['e'].values[i]), float(csvFile['Irms0-total'].values[i]))
+                except:
+                    log(f"Cannot read latest values from line {i}")
+                    continue
+            log("Connot read latest values, setting them to 0")
+            return (0.0 , 0.0)
         else:
             return (0.0, 0.0)
 
