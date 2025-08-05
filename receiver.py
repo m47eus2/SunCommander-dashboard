@@ -113,6 +113,7 @@ def log(info):
 
 
 port = "/dev/ttyUSB0"
+#port = "/dev/ttyACM0" #for oryginal uno
 baudrate = 115200
 connection = False
 data = Data()

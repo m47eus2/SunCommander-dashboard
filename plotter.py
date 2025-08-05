@@ -35,20 +35,19 @@ graphs = []
 graphs.append(Graph("Produkcja", ["limegreen"], 400, "kW", ["Irms0"]))
 graphs.append(Graph("Produkcja", ["limegreen"], 400, "kWh", ["Irms0-total"]))
 
-
 graphs.append(Graph("Moc", ["dodgerblue"], 400, "kW", ["p"]))
 graphs.append(Graph("Energia", ["dodgerblue"], 400, "kWh", ["e"]))
 
-graphs.append(Graph("Pobór odbiornik A", ["cornflowerblue","tomato"], 400, "kW", ["a","a-total"]))
-graphs.append(Graph("Pobór odbiornik B", ["cornflowerblue","tomato"], 400, "kW", ["b","b-total"]))
-graphs.append(Graph("Pobór odbiornik C", ["cornflowerblue","tomato"], 400, "kW", ["c","c-total"]))
+graphs.append(Graph("Hala 1", ["cornflowerblue","tomato"], 400, "kW", ["a","a-total"]))
+graphs.append(Graph("Hala 2", ["cornflowerblue","tomato"], 400, "kW", ["b","b-total"]))
+graphs.append(Graph("Social", ["cornflowerblue","tomato"], 400, "kW", ["c","c-total"]))
 
-graphs.append(Graph("Stan obriornik A", ["steelblue"], 150, "", ["a-state"]))
-graphs.append(Graph("Stan obriornik B", ["steelblue"], 150, "", ["b-state"]))
-graphs.append(Graph("Stan obriornik C", ["steelblue"], 150, "", ["c-state"]))
+graphs.append(Graph("Hala 1", ["steelblue"], 150, "", ["a-state"]))
+graphs.append(Graph("Hala 2", ["steelblue"], 150, "", ["b-state"]))
+graphs.append(Graph("Social", ["steelblue"], 150, "", ["c-state"]))
 
-graphs.append(Graph("Stan boiler 1", ["lightseagreen"], 400, "", ["b0"]))
-graphs.append(Graph("Stan boiler 2", ["lightseagreen"], 400, "", ["b1"]))
+graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, "", ["b0"]))
+graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, "", ["b1"]))
 
 # Recent timespan selector 
 selector = Select(title="Typ", value=0, options=[
