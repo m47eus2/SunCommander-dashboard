@@ -82,6 +82,12 @@ def update():
     agregatedDataPATH = "database/agrData.csv"
 
     recentData = pd.read_csv(recentDataPATH)
+    if selectedTime["type"] > 0:
+        recentData['time'] = pd.to_datetime(recentData['time'], format="%Y-%m-%d %H:%M:%S")
+        recentData.set_index('time', inplace=True)
+        recentData = recentData.resample("1Min").mean()
+        recentData = recentData.reset_index()
+
     if (os.path.isfile(agregatedDataPATH)==1) & (selectedTime["type"]>1):
         agregatedData = pd.read_csv(agregatedDataPATH)
         data = pd.concat([agregatedData, recentData], ignore_index=True)
