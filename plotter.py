@@ -82,6 +82,7 @@ def update():
     agregatedDataPATH = "database/agrData.csv"
 
     recentData = pd.read_csv(recentDataPATH)
+    # Resampling recentData when selected data type is greater than minutes
     if selectedTime["type"] > 0:
         recentData['time'] = pd.to_datetime(recentData['time'], format="%Y-%m-%d %H:%M:%S")
         recentData.set_index('time', inplace=True)
