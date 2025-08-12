@@ -135,27 +135,26 @@ connection = False
 data = Data()
 
 #Connection
-try:
-    log(f"Trying to connect with {port}")
-    serialPort = serial.Serial(port, baudrate, timeout=3)
-    log(f"Connected with {port}")
-    connection = True
-    time.sleep(4)
-
-except:
-    log(f"Cannot connect with {port}")
-    connection = False
-
-#Receiving data
-if connection:
+while True:
     try:
-        while True:
-            if serialPort.in_waiting:
-                line = serialPort.readline().decode("utf-8").rstrip()
-                data.collectData(line)
-            else:
-                time.sleep(0.01)
+        log(f"Trying to connect with {port}")
+        serialPort = serial.Serial(port, baudrate, timeout=3)
+        log(f"Connected with {port}")
+
+        time.sleep(4)
+        try:
+            while True:
+                if serialPort.in_waiting:
+                    line = serialPort.readline().decode("utf-8").rstrip()
+                    data.collectData(line)
+                else:
+                    time.sleep(0.01)
+        except Exception as e:
+            log(f"Error while receiving data -> {e}")
+        finally:
+            serialPort.close()
+        
     except Exception as e:
-        log(e)
-    finally:
+        log(f"Cannot connect with {port} -> {e}")
         serialPort.close()
+        time.sleep(5)
