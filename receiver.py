@@ -134,19 +134,26 @@ baudrate = 115200
 connection = False
 data = Data()
 
+def sendCurrentHour():
+    hour = datetime.now().strftime("%H")
+    serialPort.write(f"{hour}\n".encode())
+
 #Connection
 while True:
     try:
         log(f"Trying to connect with {port}")
         serialPort = serial.Serial(port, baudrate, timeout=3)
         log(f"Connected with {port}")
-
         time.sleep(4)
+
         try:
             while True:
                 if serialPort.in_waiting:
                     line = serialPort.readline().decode("utf-8").rstrip()
+                    print(line)
                     data.collectData(line)
+
+                    sendCurrentHour()
                 else:
                     time.sleep(0.01)
         except Exception as e:
