@@ -160,16 +160,17 @@ class App():
     def receivingData(self):
         while True:
             if self.serialPort.in_waiting:
+                self.sendTimeInfo()
                 line = self.serialPort.readline().decode("utf-8").rstrip()
                 print(line)
                 self.data.collectData(line)
-                self.sendCurrentHour()
             else:
                 time.sleep(0.01)
 
-    def sendCurrentHour(self):
+    def sendTimeInfo(self):
         hour = datetime.now().strftime("%H")
-        self.serialPort.write(f"{hour}\n".encode())
+        info = 1 if 12 <= int(hour) <= 16 else 0
+        self.serialPort.write(f"{info}\n".encode())
 
     def log(self,info):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
