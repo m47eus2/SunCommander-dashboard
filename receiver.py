@@ -109,12 +109,12 @@ class Data:
             csvFile=csvFile.tail(linesToTry)
             for i in range(linesToTry-1, -1, -1):
                 try:
-                    log(f"Trying to read latest values from line {i}")
+                    self.log(f"Trying to read latest values from line {i}")
                     return (float(csvFile['e'].values[i]), float(csvFile['Irms0-total'].values[i]))
                 except:
-                    log(f"Cannot read latest values from line {i}")
+                    self.log(f"Cannot read latest values from line {i}")
                     continue
-            log("Connot read latest values, setting them to 0")
+            self.log("Connot read latest values, setting them to 0")
             return (0.0 , 0.0)
         else:
             return (0.0, 0.0)
@@ -122,46 +122,57 @@ class Data:
     def resetValues(self):
         for key in self.data.keys():
             self.data[key] = '0'
+    
+    def log(self,info):
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{now}]: {info}")
 
-def log(info):
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{now}]: {info}")
+class App():
+    def __init__(self):
+        self.port = "/dev/ttyUSB0"
+        #self.port = "/dev/ttyACM0" #for oryginal uno
+        self.baudrate = 115200
+        self.connection = False
+        self.data = Data()
 
+        self.run()
 
-port = "/dev/ttyUSB0"
-#port = "/dev/ttyACM0" #for oryginal uno
-baudrate = 115200
-connection = False
-data = Data()
+    def run(self):
+        while True:
+            try:
+                self.log(f"Trying to connect with {self.port}")
+                self.serialPort = serial.Serial(self.port, self.baudrate, timeout=3)
+                self.log(f"Connected with {self.port}")
+                time.sleep(4)
 
-def sendCurrentHour():
-    hour = datetime.now().strftime("%H")
-    serialPort.write(f"{hour}\n".encode())
+                try:
+                    self.receivingData()
+                except Exception as e:
+                    self.log(f"Error while receiving data -> {e}")
+                finally:
+                    self.serialPort.close()
+                
+            except Exception as e:
+                self.log(f"Cannot connect with {self.port} -> {e}")
+                self.serialPort.close()
+                time.sleep(5)
 
-#Connection
-while True:
-    try:
-        log(f"Trying to connect with {port}")
-        serialPort = serial.Serial(port, baudrate, timeout=3)
-        log(f"Connected with {port}")
-        time.sleep(4)
+    def receivingData(self):
+        while True:
+            if self.serialPort.in_waiting:
+                line = self.serialPort.readline().decode("utf-8").rstrip()
+                print(line)
+                self.data.collectData(line)
+                self.sendCurrentHour()
+            else:
+                time.sleep(0.01)
 
-        try:
-            while True:
-                if serialPort.in_waiting:
-                    line = serialPort.readline().decode("utf-8").rstrip()
-                    print(line)
-                    data.collectData(line)
+    def sendCurrentHour(self):
+        hour = datetime.now().strftime("%H")
+        self.serialPort.write(f"{hour}\n".encode())
 
-                    sendCurrentHour()
-                else:
-                    time.sleep(0.01)
-        except Exception as e:
-            log(f"Error while receiving data -> {e}")
-        finally:
-            serialPort.close()
-        
-    except Exception as e:
-        log(f"Cannot connect with {port} -> {e}")
-        serialPort.close()
-        time.sleep(5)
+    def log(self,info):
+        now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(f"[{now}]: {info}")
+
+app = App()
