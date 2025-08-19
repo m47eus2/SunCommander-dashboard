@@ -154,7 +154,6 @@ class App():
                 
             except Exception as e:
                 self.log(f"Cannot connect with {self.port} -> {e}")
-                self.serialPort.close()
                 time.sleep(5)
 
     def receivingData(self):
