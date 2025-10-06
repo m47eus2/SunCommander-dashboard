@@ -49,8 +49,8 @@ graphs.append(Graph("Social", ["steelblue"], 150, "", ["c-state"]))
 graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, "", ["b0"]))
 graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, "", ["b1"]))
 
-graphs.append(Graph("Boiler 1 Extra", ["lightseagreen"], 400, "", ["b0-e"]))
-graphs.append(Graph("Boiler 1 Temp", ["tomato"], 400, "℃", ["b0-t"]))
+graphs.append(Graph("Boiler 1 Extra", ["lightseagreen"], 400, "", ["b-extra"]))
+graphs.append(Graph("Boiler 1 Temp", ["tomato"], 400, "℃", ["b-temp"]))
 
 # Recent timespan selector 
 selector = Select(title="Typ", value=0, options=[
