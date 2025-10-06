@@ -35,8 +35,9 @@ class Data:
         self.powerKeys = ['Irms0','a','b','c','a-total','b-total','c-total']
         self.stateKeys = ['a-state','b-state','c-state','b0','b-extra', 'b-temp', 'b1']
         self.timer = 0
+        self.timeInfoSendingTrigger = 0
 
-    #Getting line from serial, splitting it to key and value, changing current values to power and writing it to dictionary
+    #Getting line from serial, splitting it to key and value, changing values depending of key and writing it to dict
     def collectData(self, line):
         line = line.split(':')
         key = line[0][1:]
@@ -48,9 +49,11 @@ class Data:
                 self.data[key] = float(line[1])
             except:
                 self.data[key] = 0.0
-        if key == 'b1':
+        if key == 'b-temp':
             #When last value comes filling dict and writing it to csv
             self.writeToCsv()
+            #Setting trigger - App will be able to send timeifo without filling serial buffer
+            self.timeInfoSendingTrigger = 1
 
     def writeToCsv(self):
         PATH = f"database/{datetime.now().strftime('%Y-%m-%d')}-log.csv"
@@ -59,7 +62,7 @@ class Data:
             writer = csv.writer(file)
             if not fileExists:
                 writer.writerow(self.data.keys())
-            #Filling dictionary last values -> time, modyfing Irms0, receivers total power, calculating energies, 
+            #Filling dictionary last values -> time, modyfing Irms0, receivers total power, calculating energies
             self.fillRow()
             #Writing dictionary to csv
             writer.writerow(self.data.values())
@@ -129,6 +132,9 @@ class Data:
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         print(f"[{now}]: {info}")
 
+    def resetTimeInfoTrigger(self):
+        self.timeInfoSendingTrigger = 0
+
 class App():
     def __init__(self):
         self.port = "/dev/ttyUSB0"
@@ -161,7 +167,13 @@ class App():
     def receivingData(self):
         while True:
             if self.serialPort.in_waiting:
-                self.sendTimeInfo()
+
+                #Sending timeinfo
+                if self.data.timeInfoSendingTrigger == 1:
+                    self.sendTimeInfo()
+                    self.data.resetTimeInfoTrigger()
+
+                #Receiving data from serial port
                 line = self.serialPort.readline().decode("utf-8").rstrip()
                 print(line)
                 self.data.collectData(line)
@@ -172,6 +184,7 @@ class App():
         hour = datetime.now().strftime("%H")
         info = 1 if 12 <= int(hour) <= 15 else 0
         self.serialPort.write(f"{info}\n".encode())
+        self.log("TimeInfo data sent")
 
     def log(self,info):
         now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
