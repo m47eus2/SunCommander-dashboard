@@ -22,6 +22,8 @@ class Data:
             'b-state':'0',
             'c-state':'0',
             'b0':'0',
+            'b0-e':'0',
+            'b0-t':'0',
             'b1':'0',
             'p':'0',
             'e':'0'
@@ -31,7 +33,7 @@ class Data:
         (self.receiverEnergy, self.productionEnergy) = self.getLastEnergyValues()
 
         self.powerKeys = ['Irms0','a','b','c','a-total','b-total','c-total']
-        self.stateKeys = ['a-state','b-state','c-state','b0','b1']
+        self.stateKeys = ['a-state','b-state','c-state','b0','b0-e', 'b0-t', 'b1']
         self.timer = 0
 
     #Getting line from serial, splitting it to key and value, changing current values to power and writing it to dictionary

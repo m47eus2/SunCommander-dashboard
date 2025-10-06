@@ -49,6 +49,9 @@ graphs.append(Graph("Social", ["steelblue"], 150, "", ["c-state"]))
 graphs.append(Graph("Boiler 1", ["lightseagreen"], 400, "", ["b0"]))
 graphs.append(Graph("Boiler 2", ["lightseagreen"], 400, "", ["b1"]))
 
+graphs.append(Graph("Boiler 1 Extra", ["lightseagreen"], 400, "", ["b0-e"]))
+graphs.append(Graph("Boiler 1 Temp", ["tomato"], 400, "℃", ["b0-t"]))
+
 # Recent timespan selector 
 selector = Select(title="Typ", value=0, options=[
     ('0','Minuty'),
@@ -120,6 +123,7 @@ layout = column(row(graphs[0].figure, graphs[1].figure, sizing_mode="stretch_wid
                 row(graphs[4].figure, graphs[5].figure, graphs[6].figure, sizing_mode="stretch_width"),
                 row(graphs[7].figure, graphs[8].figure, graphs[9].figure, sizing_mode="stretch_width"),
                 row(graphs[10].figure, graphs[11].figure, sizing_mode="stretch_width"),
+                row(graphs[12].figure, graphs[13].figure, sizing_mode="stretch_width"),
                 row(selector, textInput), 
                 sizing_mode="stretch_width")
 
