@@ -168,7 +168,7 @@ class App():
 
     def sendTimeInfo(self):
         hour = datetime.now().strftime("%H")
-        info = 1 if 12 <= int(hour) <= 16 else 0
+        info = 1 if 12 <= int(hour) <= 15 else 0
         self.serialPort.write(f"{info}\n".encode())
 
     def log(self,info):
