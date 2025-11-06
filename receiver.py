@@ -137,8 +137,8 @@ class Data:
 
 class App():
     def __init__(self):
-        self.port = "/dev/ttyUSB0"
-        #self.port = "/dev/ttyACM0" #for oryginal uno
+        #self.port = "/dev/ttyUSB0"
+        self.port = "/dev/ttyACM0" #for oryginal uno
         self.baudrate = 115200
         self.connection = False
         self.data = Data()
@@ -182,7 +182,7 @@ class App():
 
     def sendTimeInfo(self):
         hour = datetime.now().strftime("%H")
-        info = 1 if 12 <= int(hour) <= 15 else 0
+        info = 1 if 12 <= int(hour) <= 14 else 0
         self.serialPort.write(f"{info}\n".encode())
         self.log("TimeInfo data sent")
 
